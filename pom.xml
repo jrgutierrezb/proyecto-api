@@ -92,6 +92,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<appName>retail-ug</appName>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
