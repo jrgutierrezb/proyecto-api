@@ -8,4 +8,5 @@ public interface ReportService {
 	
 	List<HashMap<String, Object>> getReportByStates(Map<String, Object> parameters);
 	List<HashMap<String, Object>> getReportByYears(Integer year);
+	List<HashMap<String, Object>> getGeneralReport(Map<String, Object> parameters);
 }

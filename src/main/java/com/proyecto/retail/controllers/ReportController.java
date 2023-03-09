@@ -51,4 +51,16 @@ public class ReportController {
 			return ResponseHandler.generateResponse(true, 99, e.getMessage(), HttpStatus.MULTI_STATUS, null);
 		}
     }
+    
+ // Read operation By Id
+    @RequestMapping(value = "/report/general", method = RequestMethod.POST)
+    public ResponseEntity<Object> reportGeneral(@RequestBody Map<String, Object> parameters)
+    {
+    	try {
+    		List<HashMap<String, Object>> result = this.reportServiceImp.getGeneralReport(parameters);
+        	return ResponseHandler.generateResponse(false, 0, "OK", HttpStatus.OK, result);
+    	} catch (Exception e) {
+			return ResponseHandler.generateResponse(true, 99, e.getMessage(), HttpStatus.MULTI_STATUS, null);
+		}
+    }
 }

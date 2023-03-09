@@ -2,7 +2,7 @@ package com.proyecto.retail.Infraestructura;
 
 public class SqlQueries {
 	
-	public String consultasolicitud = "SELECT asset.id, comp.name as companydescription, age.name as agencydescripcion,"
+	public String consultasolicitud = "SELECT asset.id, asset.datecreate, comp.name as companydescription, age.name as agencydescripcion,"
 			+ " dep.name as derparmentdescription,cat.name as type, sta.name as state, tipo.name as priority"
 			+ " FROM assetrequests as asset"
 			+ " JOIN catalog as cat on asset.catalogid = cat.id"
@@ -15,11 +15,11 @@ public class SqlQueries {
 			+ " AND asset.useridrequested = Coalesce(?, asset.useridrequested) "
 			+ " AND asset.catalogid = Coalesce(?, asset.catalogid)"
 			+ " AND asset.prioritytypeid = Coalesce(?, asset.prioritytypeid)"
-			+ " AND asset.processstateid = Coalesce(?, asset.processstateid)";
+			+ " AND asset.processstateid = Coalesce(?, asset.processstateid) ORDER BY asset.id DESC";
 	
-	public String consultaSolicitudSoporte = "SELECT tmp.useridrequested,tmp.id, tmp.companydescription, tmp.agencydescripcion, tmp.derparmentdescription,"
+	public String consultaSolicitudSoporte = "SELECT tmp.useridrequested,tmp.id, tmp.datecreate, tmp.companydescription, tmp.agencydescripcion, tmp.derparmentdescription,"
 			+ "	tmp.type, tmp.state, tmp.priority, tmp.processstateid FROM (" 
-			+ " SELECT asset.useridrequested,asset.id, comp.name as companydescription, age.name as agencydescripcion, dep.name as derparmentdescription,"
+			+ " SELECT asset.useridrequested,asset.id, asset.datecreate, comp.name as companydescription, age.name as agencydescripcion, dep.name as derparmentdescription,"
 			+ "	cat.name as type, sta.name as state, tipo.name as priority, asset.processstateid"
 			+ " FROM assetrequests as asset"
 			+ " JOIN catalog as cat on asset.catalogid = cat.id"
@@ -33,7 +33,7 @@ public class SqlQueries {
 			+ " AND asset.prioritytypeid = Coalesce(?, asset.prioritytypeid)"
 			+ " AND asset.processstateid = (select id from processstates where code = 'INGRESADO' limit 1)"
 			+ " UNION"
-			+ " SELECT asset.useridrequested,asset.id, comp.name as companydescription, age.name as agencydescripcion, dep.name as derparmentdescription,"
+			+ " SELECT asset.useridrequested,asset.id, asset.datecreate, comp.name as companydescription, age.name as agencydescripcion, dep.name as derparmentdescription,"
 			+ "	cat.name as type, sta.name as state, tipo.name as priority, asset.processstateid "
 			+ " FROM assetrequests as asset"
 			+ " JOIN catalog as cat on asset.catalogid = cat.id"
@@ -47,11 +47,11 @@ public class SqlQueries {
 			+ " AND asset.catalogid = Coalesce(?, asset.catalogid) "
 			+ " AND asset.prioritytypeid = Coalesce(?, asset.prioritytypeid)"
 			+ " AND asset.processstateid in(select id from processstates where code in('PENDIENTE','APROBADO','RECHAZADO'))) as tmp"
-			+ " WHERE tmp.processstateid = Coalesce(?, tmp.processstateid);";
+			+ " WHERE tmp.processstateid = Coalesce(?, tmp.processstateid) ORDER BY tmp.id DESC";
 	
-	public String consultaSolicitudBodega = "SELECT tmp.useridrequested,tmp.id, tmp.inventoryproductid, tmp.companydescription, tmp.agencydescripcion, "
+	public String consultaSolicitudBodega = "SELECT tmp.useridrequested,tmp.id, tmp.datecreate, tmp.inventoryproductid, tmp.companydescription, tmp.agencydescripcion, "
 			+ " tmp.derparmentdescription,tmp.type, tmp.state, tmp.priority, tmp.processstateid, tmp.codenameproduct FROM ("
-			+ "	SELECT asset.useridrequested,asset.id, comp.name as companydescription, age.name as agencydescripcion, "
+			+ "	SELECT asset.useridrequested,asset.id, asset.datecreate, comp.name as companydescription, age.name as agencydescripcion, "
 			+ "	dep.name as derparmentdescription, cat.name as type, sta.name as state, tipo.name as priority, asset.processstateid,"
 			+ "	invprod.id as inventoryproductid, lpad(CAST(invprod.id AS TEXT), 12, '0') || '-' || catprod.name as codenameproduct"
 			+ "	FROM assetrequests as asset"
@@ -70,11 +70,11 @@ public class SqlQueries {
 			+ "	AND asset.prioritytypeid = Coalesce(?, asset.prioritytypeid)"
 			+ "	AND asset.processstateid in(select id from processstates "
 			+ " WHERE code in( 'BODEGA', 'MANTENIMIENTO', 'BAJA', 'DEVOLUCION'))) as tmp"
-			+ " WHERE tmp.processstateid = Coalesce(?, tmp.processstateid)";
+			+ " WHERE tmp.processstateid = Coalesce(?, tmp.processstateid) ORDER BY tmp.id DESC";
 	
-	public String consultaSolicitudVentas = "SELECT tmp.useridrequested,tmp.id, tmp.companydescription, tmp.agencydescripcion, tmp.derparmentdescription,"
+	public String consultaSolicitudVentas = "SELECT tmp.useridrequested,tmp.id, tmp.datecreate, tmp.companydescription, tmp.agencydescripcion, tmp.derparmentdescription,"
 			+ "	tmp.type, tmp.state, tmp.priority, tmp.processstateid FROM ("
-			+ " SELECT asset.useridrequested,asset.id, comp.name as companydescription, age.name as agencydescripcion, dep.name as derparmentdescription,"
+			+ " SELECT asset.useridrequested,asset.id, asset.datecreate, comp.name as companydescription, age.name as agencydescripcion, dep.name as derparmentdescription,"
 			+ "	cat.name as type, sta.name as state, tipo.name as priority, asset.processstateid "
 			+ " FROM assetrequests as asset"
 			+ " JOIN catalog as cat on asset.catalogid = cat.id"
@@ -88,11 +88,11 @@ public class SqlQueries {
 			+ " AND asset.catalogid = Coalesce(?, asset.catalogid) "
 			+ " AND asset.prioritytypeid = Coalesce(?, asset.prioritytypeid)"
 			+ " AND asset.processstateid in(select id from processstates where code in( 'APROBADO','ENVIO_PROFORMA','PROFORMA_APROBADA', 'PROFORMA_RECHAZADA', 'GUIA_REMISION'))) as tmp"
-			+ " WHERE tmp.processstateid = Coalesce(?, tmp.processstateid)";
+			+ " WHERE tmp.processstateid = Coalesce(?, tmp.processstateid) ORDER BY tmp.id DESC";
 	
-	public String consultaSolicitudGerencia = "SELECT tmp.useridrequested,tmp.id, tmp.companydescription, tmp.agencydescripcion, tmp.derparmentdescription,"
+	public String consultaSolicitudGerencia = "SELECT tmp.useridrequested,tmp.id, tmp.datecreate, tmp.companydescription, tmp.agencydescripcion, tmp.derparmentdescription,"
 			+ "	tmp.type, tmp.state, tmp.priority, tmp.processstateid FROM ("
-			+ " SELECT asset.useridrequested,asset.id, comp.name as companydescription, age.name as agencydescripcion, dep.name as derparmentdescription,"
+			+ " SELECT asset.useridrequested,asset.id, asset.datecreate, comp.name as companydescription, age.name as agencydescripcion, dep.name as derparmentdescription,"
 			+ "	cat.name as type, sta.name as state, tipo.name as priority, asset.processstateid "
 			+ " FROM assetrequests as asset"
 			+ " JOIN catalog as cat on asset.catalogid = cat.id"
@@ -106,11 +106,11 @@ public class SqlQueries {
 			+ " AND asset.catalogid = Coalesce(?, asset.catalogid) "
 			+ " AND asset.prioritytypeid = Coalesce(?, asset.prioritytypeid)"
 			+ " AND asset.processstateid in(select id from processstates where code in( 'ENVIO_PROFORMA','PROFORMA_APROBADA','PROFORMA_RECHAZADA', 'DESPACHADO', 'DEVOLUCION', 'RECIBIDO'))) as tmp"
-			+ " WHERE tmp.processstateid = Coalesce(?, tmp.processstateid)";
+			+ " WHERE tmp.processstateid = Coalesce(?, tmp.processstateid) ORDER BY tmp.id DESC";
 	
-	public String consultaSolicitudInventario = "SELECT tmp.useridrequested,tmp.id, tmp.companydescription, tmp.agencydescripcion, tmp.derparmentdescription,"
+	public String consultaSolicitudInventario = "SELECT tmp.useridrequested,tmp.id, tmp.datecreate, tmp.companydescription, tmp.agencydescripcion, tmp.derparmentdescription,"
 			+ "	tmp.type, tmp.state, tmp.priority, tmp.processstateid, tmp.numberguide FROM ("
-			+ "	SELECT asset.useridrequested,asset.id, comp.name as companydescription, age.name as agencydescripcion, "
+			+ "	SELECT asset.useridrequested,asset.id, asset.datecreate, comp.name as companydescription, age.name as agencydescripcion, "
 			+ "		dep.name as derparmentdescription, cat.name as type, sta.name as state, tipo.name as priority, "
 			+ "		asset.processstateid, asset.numberguide"
 			+ "	FROM assetrequests as asset"
@@ -124,7 +124,7 @@ public class SqlQueries {
 			+ "	AND asset.catalogid = Coalesce(?, asset.catalogid)"
 			+ "	AND asset.prioritytypeid = Coalesce(?, asset.prioritytypeid)"
 			+ " AND asset.numberguide like CONCAT('%',Coalesce(?, asset.numberguide),'%') "
-			+ "	AND asset.processstateid in(select id from processstates where code in('GUIA_REMISION','SALIDA_CD', 'RECIBIDO_CDI', 'DESPACHADO'))) as tmp";
+			+ "	AND asset.processstateid in(select id from processstates where code in('GUIA_REMISION','SALIDA_CD', 'RECIBIDO_CDI', 'DESPACHADO'))) as tmp ORDER BY tmp.id DESC";
 	
 	public String reportPorEstados = "SELECT processstateid, proc.name, COUNT(ass.id) as quantity FROM assetrequests as ass"
 			+ " JOIN processstates as proc on ass.processstateid = proc.id"
@@ -178,4 +178,18 @@ public class SqlQueries {
 			+ " JOIN products AS prod ON prod.id = invprod.productid"
 			+ " JOIN catalog AS cat ON cat.id = inv.catalogid"
 			+ " where invprod.id = ?";
-}
+	
+	public String consultaReporteGeneral = "SELECT invprod.id,lpad(CAST(invprod.id AS TEXT), 12, '0') AS productcode, catinv.name AS productname, "
+			+ "	invprod.datein, invprod.dateout, invprod.yearwarranty, invprod.invoicenumber, invprod.brand, invprod.model, "
+			+ "	comp.name AS companyname, agen.name AS agencyname, dep.name AS departmentname, cat.name AS statename"
+			+ "	FROM inventoryproducts AS invprod"
+			+ " JOIN inventories AS inv ON inv.id = invprod.inventoryid"
+			+ "	JOIN catalog AS catinv ON catinv.id = inv.catalogid"
+			+ "	JOIN companytobebilling AS comp ON comp.id = invprod.billingid"
+			+ "	JOIN agencies AS agen ON agen.id = invprod.agencyid"
+			+ "	JOIN workdepartments AS dep ON dep.id = invprod.workdepartmentid"
+			+ "	JOIN catalog AS cat ON cat.id = invprod.productstateid"
+			+ " WHERE invprod.datein BETWEEN TO_TIMESTAMP(?, 'YYYY-MM-DD') AND TO_TIMESTAMP(?, 'YYYY-MM-DD')"
+			+ " AND invprod.agencyid = Coalesce(?, invprod.agencyid)"
+			+ " AND invprod.workdepartmentid = Coalesce(?, invprod.workdepartmentid);";
+	}

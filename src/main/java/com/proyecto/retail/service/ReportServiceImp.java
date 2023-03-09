@@ -30,4 +30,10 @@ public class ReportServiceImp implements ReportService {
 		parameters.put("p_year", year);
 		return executeProcedure.executeProcedure(sql.reportPorAnios, parameters);
 	}
+	
+	@Override
+	public List<HashMap<String, Object>> getGeneralReport(Map<String, Object> parameters) {
+		SqlQueries sql = new SqlQueries();
+		return executeProcedure.executeProcedure(sql.consultaReporteGeneral, parameters);
+	}
 }
